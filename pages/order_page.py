@@ -1,3 +1,4 @@
+import allure
 from selenium.webdriver.common.by import By
 from pages.base_page import BasePage
 
@@ -20,6 +21,10 @@ class OrderPage(BasePage):
     CONFIRM_BUTTON = (By.XPATH, "//button[text()='Да']")
     SUCCESS_MODAL = (By.XPATH, "//div[@class='Order_ModalHeader__3FDaJ' and text()='Заказ оформлен']")
 
+    def __init__(self, driver):
+        self.driver = driver
+
+    @allure.step('Заполнение первой формы заказа')
     def fill_first_form(self, name, surname, address, metro, phone):
         self.send_keys_to_element(self.NAME_INPUT, name)
         self.send_keys_to_element(self.SURNAME_INPUT, surname)
@@ -29,12 +34,15 @@ class OrderPage(BasePage):
         self.send_keys_to_element(self.PHONE_INPUT, phone)
         self.click_element(self.NEXT_BUTTON)
 
+    @allure.step('Метод проверки усешного заказа')
     def is_success_visible(self):
         return self.wait_for_element(self.SUCCESS_MODAL).is_displayed()
-    
+
+    @allure.step('Ожидание появления элемента страницы')    
     def wait_for_order_page(self):
         self.wait_for_element(self.NAME_INPUT, timeout=15)
-        
+
+    @allure.step('Заполнение второй формы хаказа')        
     def fill_second_form(self, date, period, color, comment):
         self.send_keys_to_element(self.DATE_INPUT, date)
         self.click_element(self.DAY_INPUT)
